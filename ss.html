@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Bee Swarm Join</title>
+
+  <meta property="og:title" content="Bee Swarm Join" />
+  <meta property="og:description" content="Join Bee Swarm Simulator server" />
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffd84d, #ff9900, #111);
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 24px;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+
+    .bee {
+      font-size: 56px;
+      margin-bottom: 10px;
+    }
+
+    a, button {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px 20px;
+      border-radius: 14px;
+      background: #ffcc00;
+      color: #111;
+      text-decoration: none;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .error {
+      color: #ffdddd;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="bee">🐝</div>
+    <h1>Bee Swarm Join</h1>
+    <p>Открываем Roblox сервер...</p>
+
+    <button onclick="openRoblox()">Open Roblox</button>
+
+    <p id="error" class="error"></p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+
+    const placeId = params.get("placeId") || "1537690962";
+    const jobId = params.get("jobId");
+
+    const error = document.getElementById("error");
+
+    function openRoblox() {
+      if (!jobId) {
+        error.textContent = "Ошибка: в ссылке нет jobId";
+        return;
+      }
+
+      const robloxUrl =
+        "roblox://experiences/start?placeId=" +
+        encodeURIComponent(placeId) +
+        "&gameInstanceId=" +
+        encodeURIComponent(jobId);
+
+      window.location.href = robloxUrl;
+    }
+
+    if (jobId) {
+      setTimeout(openRoblox, 700);
+    } else {
+      error.textContent = "В ссылке нет jobId";
+    }
+  </script>
+</body>
+</html>
