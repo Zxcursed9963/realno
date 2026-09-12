@@ -3,44 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Join Roblox</title>
+
+  <meta property="og:title" content="Join Roblox Server" />
+  <meta property="og:description" content="Click to join Roblox server" />
+  <meta property="og:type" content="website" />
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0b0f14;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .box {
+      width: 100%;
+      max-width: 420px;
+      background: #151b23;
+      border: 1px solid #30363d;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 26px;
+    }
+
+    p {
+      color: #c9d1d9;
+      line-height: 1.5;
+    }
+
+    button {
+      margin-top: 18px;
+      width: 100%;
+      padding: 14px 18px;
+      border: 0;
+      border-radius: 12px;
+      background: #2f81f7;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1f6feb;
+    }
+
+    .small {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #8b949e;
+      word-break: break-all;
+    }
+  </style>
 </head>
 <body>
-  <h2>Открываю Roblox...</h2>
-  <p>Если Roblox не открылся, нажми кнопку:</p>
-  <button onclick="openRoblox()">Зайти на сервер</button>
+  <div class="box">
+    <h1>Join Roblox Server</h1>
+    <p>Открываем Roblox сервер...</p>
+
+    <button onclick="openRoblox()">Open Roblox</button>
+
+    <div class="small" id="info"></div>
+  </div>
 
   <script>
-    const placeId = "1537690962";
+    const PLACE_ID = "1537690962";
 
     function getJobId() {
-      // Берёт всё после домена:
+      // Вариант 1:
       // https://site.netlify.app/f5cf8c7e-176f-4390-97c9-cd2ebba26838
-      let jobId = window.location.pathname.replace("/", "").trim();
+      let jobId = window.location.pathname.replace(/^\/+|\/+$/g, "").trim();
 
-      // На всякий случай также поддержка ?jobId=...
+      // Вариант 2:
+      // https://site.netlify.app/?jobId=f5cf8c7e-176f-4390-97c9-cd2ebba26838
       if (!jobId) {
         const params = new URLSearchParams(window.location.search);
-        jobId = params.get("jobId");
+        jobId = params.get("jobId") || "";
+      }
+
+      // Вариант 3:
+      // https://site.netlify.app/#f5cf8c7e-176f-4390-97c9-cd2ebba26838
+      if (!jobId) {
+        jobId = window.location.hash.replace("#", "").trim();
       }
 
       return jobId;
     }
 
-    function openRoblox() {
+    function buildRobloxUrl() {
       const jobId = getJobId();
 
       if (!jobId) {
-        alert("Нет jobId в ссылке");
+        return null;
+      }
+
+      return (
+        "roblox://experiences/start?placeId=" +
+        encodeURIComponent(PLACE_ID) +
+        "&gameInstanceId=" +
+        encodeURIComponent(jobId)
+      );
+    }
+
+    function openRoblox() {
+      const robloxUrl = buildRobloxUrl();
+
+      if (!robloxUrl) {
+        document.getElementById("info").textContent =
+          "Ошибка: jobId не найден в ссылке.";
         return;
       }
 
-      const robloxUrl =
-        "roblox://experiences/start?placeId=" +
-        encodeURIComponent(placeId) +
-        "&gameInstanceId=" +
-        encodeURIComponent(jobId);
-
+      document.getElementById("info").textContent = robloxUrl;
       window.location.href = robloxUrl;
     }
 
