@@ -1,34 +1,50 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Переход в Roblox...</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join Roblox</title>
 </head>
 <body>
-    <h2>Запуск Roblox... Если игра не открылась, нажмите <a id="manual-link" href="#">сюда</a>.</h2>
+  <h2>Открываю Roblox...</h2>
+  <p>Если Roblox не открылся, нажми кнопку:</p>
+  <button onclick="openRoblox()">Зайти на сервер</button>
 
-    <script>
-        // Получаем параметры placeId и gameInstanceId (или jobId) из URL сайта
-        const urlParams = new URLSearchParams(window.location.search);
-        const placeId = urlParams.get('placeId');
-        // Поддерживаем оба варианта названия параметра
-        const jobId = urlParams.get('gameInstanceId') || urlParams.get('jobId');
+  <script>
+    const placeId = "1537690962";
 
-        if (placeId && jobId) {
-            // Формируем прямую ссылку для запуска Roblox
-            const robloxUri = `roblox://experiences/start?placeId=${placeId}&gameInstanceId=${jobId}`;
-            
-            // Настраиваем ссылку для ручного клика (на всякий случай)
-            document.getElementById('manual-link').href = robloxUri;
+    function getJobId() {
+      // Берёт всё после домена:
+      // https://site.netlify.app/f5cf8c7e-176f-4390-97c9-cd2ebba26838
+      let jobId = window.location.pathname.replace("/", "").trim();
 
-            // Автоматически перенаправляем пользователя (запускаем Roblox)
-            window.location.href = robloxUri;
+      // На всякий случай также поддержка ?jobId=...
+      if (!jobId) {
+        const params = new URLSearchParams(window.location.search);
+        jobId = params.get("jobId");
+      }
 
-            // Дополнительно закрываем вкладку через 3 секунды, чтобы не висела пустой
-            setTimeout(() => { window.close(); }, 3000);
-        } else {
-            document.body.innerHTML = "<h2>Ошибка: Не указаны параметры placeId или gameInstanceId.</h2>";
-        }
-    </script>
+      return jobId;
+    }
+
+    function openRoblox() {
+      const jobId = getJobId();
+
+      if (!jobId) {
+        alert("Нет jobId в ссылке");
+        return;
+      }
+
+      const robloxUrl =
+        "roblox://experiences/start?placeId=" +
+        encodeURIComponent(placeId) +
+        "&gameInstanceId=" +
+        encodeURIComponent(jobId);
+
+      window.location.href = robloxUrl;
+    }
+
+    setTimeout(openRoblox, 500);
+  </script>
 </body>
 </html>
