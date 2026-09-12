@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/v1/roblox/join",
+      "destination": "/api/v1/roblox/join"
+    }
+  ]
+}
